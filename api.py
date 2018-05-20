@@ -1,6 +1,10 @@
-from flask import Flask, request
+from flask import Flask
 from flask_restful import Resource, Api, reqparse
 from flaskext.mysql import MySQL
+import yaml
+
+with open("config.yml", 'r') as ymlfile:
+    cfg = yaml.load(ymlfile)
 
 app = Flask(__name__)
 api = Api(app)
@@ -8,6 +12,12 @@ api = Api(app)
 mysql = MySQL()
 
 mysql.init_app(app)
+
+# MySQL configurations
+app.config['MYSQL_DATABASE_USER'] = cfg['mysql']['MysqlDatabaseUser']
+app.config['MYSQL_DATABASE_PASSWORD'] = cfg['mysql']['MysqlDatabasePassword']
+app.config['MYSQL_DATABASE_DB'] = cfg['mysql']['MysqlDatabaseDb']
+app.config['MYSQL_DATABASE_HOST'] = cfg['mysql']['MysqlDatabaseHost']
 
 
 class CreateUser(Resource):
